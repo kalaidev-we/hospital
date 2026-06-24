@@ -15,7 +15,7 @@ export default function Registration({ supabase, onRegistered }) {
     setLoading(true);
     let token_no;
     try {
-      const { count, error } = await supabase.from("tokens").select("id", { count: "exact", head: true });
+      const { count, error } = await supabase.from("tockens").select("id", { count: "exact", head: true });
       if (error) throw error;
       token_no = (count || 0) + 1;
     } catch (err) {
@@ -31,7 +31,7 @@ export default function Registration({ supabase, onRegistered }) {
       eta: null,
     };
 
-    const { data, error } = await supabase.from("tokens").insert([payload]);
+    const { data, error } = await supabase.from("tockens").insert([payload]);
     setLoading(false);
     if (error) return setMessage({ type: "error", text: error.message });
     setName(""); setPhone(""); setDetails(""); setRoom("");
