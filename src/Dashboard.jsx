@@ -109,8 +109,10 @@ export default function Dashboard({ supabase, user, onSignOut }) {
                     <tr>
                       <th>Token</th>
                       <th>Name</th>
-                      <th>Status</th>
+                      <th>Department</th>
+                      <th>Doctor</th>
                       <th>Room</th>
+                      <th>Status</th>
                       <th>ETA</th>
                       <th>Update</th>
                     </tr>
@@ -120,12 +122,14 @@ export default function Dashboard({ supabase, user, onSignOut }) {
                       <tr key={t.id}>
                         <td>{t.token_no}</td>
                         <td>{t.name}</td>
+                        <td>{t.department ?? "—"}</td>
+                        <td>{t.doctor ?? "—"}</td>
+                        <td>{t.room ?? "—"}</td>
                         <td>
                           <span className={`status-badge status-${normalizeStatus(t.status)}`}>
                             {t.status}
                           </span>
                         </td>
-                        <td>{t.room ?? "—"}</td>
                         <td>{estimateEta(t)}</td>
                         <td>
                           <select value={t.status} onChange={(e) => updateStatus(t.id, e.target.value)}>

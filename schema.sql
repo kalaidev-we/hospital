@@ -9,6 +9,8 @@ CREATE TABLE public.tokens (
   name text NOT NULL,
   phone text,
   details text,
+  department text,
+  doctor text,
   room text,
   status text NOT NULL DEFAULT 'waiting',
   eta timestamptz,
