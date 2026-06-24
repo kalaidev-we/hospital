@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isConfigured, supabase } from "./supabase.js";
+import Dashboard from "./Dashboard.jsx";
 
 export default function App() {
   const [email, setEmail] = useState("");
@@ -52,7 +53,7 @@ export default function App() {
     <section className="auth">
       <div className="card">
         <div className="mobile-brand"><span className="logo">+</span> hospital Dashboard</div>
-        {loading && !user ? <p>Loading…</p> : user ? <div className="signed-in"><div className="check">✓</div><p className="kicker dark">SIGNED IN</p><h2>Welcome back.</h2><p>{user.email}</p><button className="primary" onClick={signOut}>Sign out</button></div> : <>
+        {loading && !user ? <p>Loading…</p> : user ? <Dashboard supabase={supabase} user={user} onSignOut={signOut} /> : <>
           <p className="kicker dark">waiting queue DASHBOARD</p>
           <h2>Welcome back</h2>
           <p className="subtitle">Sign in with the authorized account to continue.</p>
