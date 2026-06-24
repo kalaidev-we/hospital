@@ -2,4 +2,3 @@
 node_modules/
 dist/
 .vite/
-\node_modules

@@ -4,7 +4,6 @@ import { isConfigured, supabase } from "./supabase.js";
 export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [registering, setRegistering] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
@@ -26,12 +25,9 @@ export default function App() {
     if (!isConfigured) return setMessage({ type: "error", text: "Supabase is not configured. Check your .env file." });
     setLoading(true);
     const credentials = { email: email.trim(), password };
-    const { data, error } = registering
-      ? await supabase.auth.signUp(credentials)
-      : await supabase.auth.signInWithPassword(credentials);
+    const { error } = await supabase.auth.signInWithPassword(credentials);
     setLoading(false);
     if (error) return setMessage({ type: "error", text: error.message });
-    if (registering && !data.session) setMessage({ type: "success", text: "Account created. Check your inbox to confirm your email." });
   }
 
   async function forgotPassword() {
@@ -49,26 +45,25 @@ export default function App() {
 
   return <main className="layout">
     <section className="hero">
-      <a className="brand" href="/" aria-label="CareBridge home"><span className="logo">+</span> CareBridge</a>
-      <div className="hero-copy"><p className="kicker">YOUR HEALTH, CONNECTED</p><h1>Care that stays<br />with you.</h1><p>Access appointments, health records, and your care team from one secure place.</p></div>
+      <a className="brand" href="/" aria-label="CareBridge home"><span className="logo">+</span> hospital Dashboard</a>
+      <div className="hero-copy"><p className="kicker">Waiting Queue</p><h1>Management<br />Dashboard</h1><p>Access appointments,tokens.</p></div>
       <small>Secure care for patients and families</small>
     </section>
     <section className="auth">
       <div className="card">
-        <div className="mobile-brand"><span className="logo">+</span> CareBridge</div>
+        <div className="mobile-brand"><span className="logo">+</span> hospital Dashboard</div>
         {loading && !user ? <p>Loading…</p> : user ? <div className="signed-in"><div className="check">✓</div><p className="kicker dark">SIGNED IN</p><h2>Welcome back.</h2><p>{user.email}</p><button className="primary" onClick={signOut}>Sign out</button></div> : <>
-          <p className="kicker dark">PATIENT PORTAL</p>
-          <h2>{registering ? "Create account" : "Welcome back"}</h2>
-          <p className="subtitle">{registering ? "Create an account to manage your care." : "Sign in to continue to your dashboard."}</p>
+          <p className="kicker dark">waiting queue DASHBOARD</p>
+          <h2>Welcome back</h2>
+          <p className="subtitle">Sign in with the authorized account to continue.</p>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">Email address</label>
             <input id="email" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required />
-            <div className="label-row"><label htmlFor="password">Password</label>{!registering && <button className="link" type="button" onClick={forgotPassword}>Forgot password?</button>}</div>
-            <div className="password"><input id="password" type={visible ? "text" : "password"} autoComplete={registering ? "new-password" : "current-password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="At least 6 characters" minLength={6} required /><button type="button" className="show" onClick={() => setVisible(!visible)}>{visible ? "Hide" : "Show"}</button></div>
+            <div className="label-row"><label htmlFor="password">Password</label><button className="link" type="button" onClick={forgotPassword}>Forgot password?</button></div>
+            <div className="password"><input id="password" type={visible ? "text" : "password"} autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" minLength={6} required /><button type="button" className="show" onClick={() => setVisible(!visible)}>{visible ? "Hide" : "Show"}</button></div>
             {message && <div className={`message ${message.type}`} role="status">{message.text}</div>}
-            <button className="primary" disabled={loading}>{loading ? "Please wait…" : registering ? "Create account" : "Sign in"}</button>
+            <button className="primary" disabled={loading}>{loading ? "Please wait…" : "Sign in"}</button>
           </form>
-          <p className="switch">{registering ? "Already have an account?" : "New to CareBridge?"} <button className="link" onClick={() => { setRegistering(!registering); setMessage(null); }}>{registering ? "Sign in" : "Create account"}</button></p>
         </>}
       </div>
     </section>
