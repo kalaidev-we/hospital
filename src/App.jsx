@@ -44,7 +44,7 @@ export default function App() {
     setPassword("");
   }
 
-  return <main className="layout">
+  return <main className={`layout ${user ? "dashboard-mode" : ""}`}>
     <section className="hero">
       <a className="brand" href="/" aria-label="CareBridge home"><span className="logo">+</span> hospital Dashboard</a>
       <div className="hero-copy"><p className="kicker">Waiting Queue</p><h1>Management<br />Dashboard</h1><p>Access appointments,tokens.</p></div>
