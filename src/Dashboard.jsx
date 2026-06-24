@@ -70,7 +70,10 @@ export default function Dashboard({ supabase, user, onSignOut }) {
                       <select value={t.status} onChange={e => updateStatus(t.id, e.target.value)}>
                         <option value="waiting">Waiting</option>
                         <option value="in observation">In Observation</option>
-                        <option value="visiting doctor">Visiting Doctor</option>
+                        <option value="in consultation">In Consultation</option>
+                        <option value="Discharged">Discharged</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                       </select>
                     </td>
                   </tr>

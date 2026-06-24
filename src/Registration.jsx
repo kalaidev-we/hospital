@@ -13,8 +13,6 @@ export default function Registration({ supabase, onRegistered }) {
     setMessage(null);
     if (!supabase) return setMessage({ type: "error", text: "Supabase not configured" });
     setLoading(true);
-
-    // Try to produce a simple incremental token number based on count
     let token_no;
     try {
       const { count, error } = await supabase.from("tokens").select("id", { count: "exact", head: true });
@@ -23,7 +21,6 @@ export default function Registration({ supabase, onRegistered }) {
     } catch (err) {
       token_no = Math.floor(Date.now() / 1000);
     }
-
     const payload = {
       token_no,
       name: name.trim(),
