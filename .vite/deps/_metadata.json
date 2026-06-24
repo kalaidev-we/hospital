@@ -2,7 +2,33 @@
   "hash": "06213f48",
   "configHash": "ce54af62",
   "lockfileHash": "2426986f",
-  "browserHash": "cad8ab26",
-  "optimized": {},
-  "chunks": {}
+  "browserHash": "8128e99a",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "e90a3f52",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "14ac3033",
+      "needsInterop": true
+    },
+    "@supabase/supabase-js": {
+      "src": "../../node_modules/@supabase/supabase-js/dist/index.mjs",
+      "file": "@supabase_supabase-js.js",
+      "fileHash": "7c1fd7c4",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-XTL33FIW": {
+      "file": "chunk-XTL33FIW.js"
+    },
+    "chunk-BUSYA2B4": {
+      "file": "chunk-BUSYA2B4.js"
+    }
+  }
 }
