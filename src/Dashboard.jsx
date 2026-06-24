@@ -15,7 +15,11 @@ export default function Dashboard({ supabase, user, onSignOut }) {
     setLoading(false);
   }
 
-  useEffect(() => { fetchTokens(); const iv = setInterval(fetchTokens, 5000); return () => clearInterval(iv); }, []);
+  useEffect(() => {
+    fetchTokens();
+    const iv = setInterval(fetchTokens, 5000);
+    return () => clearInterval(iv);
+  }, []);
 
   async function updateStatus(id, status) {
     if (!supabase) return;
@@ -24,30 +28,61 @@ export default function Dashboard({ supabase, user, onSignOut }) {
     else fetchTokens();
   }
 
+  const stats = {
+    total: tokens.length,
+    waiting: tokens.filter((t) => t.status === "waiting").length,
+    observation: tokens.filter((t) => t.status === "in observation").length,
+    visiting: tokens.filter((t) => t.status === "visiting doctor" || t.status === "in consultation").length,
+  };
+
+  const normalizeStatus = (status) => status?.toLowerCase().replace(/\s+/g, "-") ?? "unknown";
+
   return (
-    <div className="signed-in">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div className="signed-in dashboard-page">
+      <div className="dashboard-header">
         <div>
           <p className="kicker dark">SIGNED IN</p>
           <h2>Welcome back.</h2>
           <p>{user.email}</p>
         </div>
-        <div>
-          <button className="primary" onClick={onSignOut}>Sign out</button>
+        <button className="primary" onClick={onSignOut}>Sign out</button>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <p className="stat-label">Total tokens</p>
+          <p className="stat-value">{stats.total}</p>
+        </div>
+        <div className="stat-card">
+          <p className="stat-label">Waiting</p>
+          <p className="stat-value">{stats.waiting}</p>
+        </div>
+        <div className="stat-card">
+          <p className="stat-label">In observation</p>
+          <p className="stat-value">{stats.observation}</p>
+        </div>
+        <div className="stat-card">
+          <p className="stat-label">With doctor</p>
+          <p className="stat-value">{stats.visiting}</p>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 20, marginTop: 28 }}>
-        <div>
+      <div className="dashboard-grid">
+        <section className="dashboard-panel">
           <h3>New Registration</h3>
           <Registration supabase={supabase} onRegistered={fetchTokens} />
-        </div>
+        </section>
 
-        <div>
-          <h3>Tokens</h3>
+        <section className="dashboard-panel">
+          <div className="panel-heading">
+            <h3>Tokens</h3>
+            <small>{loading ? "Refreshing…" : `${tokens.length} records found`}</small>
+          </div>
           {error && <div className="message error">{error}</div>}
-          {loading ? <p>Loading tokens…</p> : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          {loading ? (
+            <p>Loading tokens…</p>
+          ) : (
+            <table className="token-table">
               <thead>
                 <tr>
                   <th>Token</th>
@@ -55,22 +90,27 @@ export default function Dashboard({ supabase, user, onSignOut }) {
                   <th>Status</th>
                   <th>Room</th>
                   <th>ETA</th>
-                  <th></th>
+                  <th>Update</th>
                 </tr>
               </thead>
               <tbody>
-                {tokens.map(t => (
-                  <tr key={t.id} style={{ borderTop: "1px solid #e6efee" }}>
-                    <td style={{ padding: 8 }}>{t.token_no}</td>
-                    <td style={{ padding: 8 }}>{t.name}</td>
-                    <td style={{ padding: 8 }}>{t.status}</td>
-                    <td style={{ padding: 8 }}>{t.room ?? "—"}</td>
-                    <td style={{ padding: 8 }}>{t.eta ?? "—"}</td>
-                    <td style={{ padding: 8 }}>
-                      <select value={t.status} onChange={e => updateStatus(t.id, e.target.value)}>
+                {tokens.map((t) => (
+                  <tr key={t.id}>
+                    <td>{t.token_no}</td>
+                    <td>{t.name}</td>
+                    <td>
+                      <span className={`status-badge status-${normalizeStatus(t.status)}`}>
+                        {t.status}
+                      </span>
+                    </td>
+                    <td>{t.room ?? "—"}</td>
+                    <td>{t.eta ?? "—"}</td>
+                    <td>
+                      <select value={t.status} onChange={(e) => updateStatus(t.id, e.target.value)}>
                         <option value="waiting">Waiting</option>
                         <option value="in observation">In Observation</option>
                         <option value="in consultation">In Consultation</option>
+                        <option value="visiting doctor">Visiting Doctor</option>
                         <option value="Discharged">Discharged</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
@@ -81,7 +121,7 @@ export default function Dashboard({ supabase, user, onSignOut }) {
               </tbody>
             </table>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );
