@@ -51,9 +51,13 @@ export default function App() {
       <small>Secure care for patients and families</small>
     </section>
     <section className="auth">
-      <div className="card">
-        <div className="mobile-brand"><span className="logo">+</span> hospital Dashboard</div>
-        {loading && !user ? <p>Loading…</p> : user ? <Dashboard supabase={supabase} user={user} onSignOut={signOut} /> : <>
+      {loading && !user ? (
+        <div className="card"><p>Loading…</p></div>
+      ) : user ? (
+        <Dashboard supabase={supabase} user={user} onSignOut={signOut} />
+      ) : (
+        <div className="card">
+          <div className="mobile-brand"><span className="logo">+</span> hospital Dashboard</div>
           <p className="kicker dark">waiting queue DASHBOARD</p>
           <h2>Welcome back</h2>
           <p className="subtitle">Sign in with the authorized account to continue.</p>
@@ -65,8 +69,8 @@ export default function App() {
             {message && <div className={`message ${message.type}`} role="status">{message.text}</div>}
             <button className="primary" disabled={loading}>{loading ? "Please wait…" : "Sign in"}</button>
           </form>
-        </>}
-      </div>
+        </div>
+      )}
     </section>
   </main>;
 }

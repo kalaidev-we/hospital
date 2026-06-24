@@ -111,6 +111,7 @@ export default function Dashboard({ supabase, user, onSignOut }) {
                         <option value="in observation">In Observation</option>
                         <option value="in consultation">In Consultation</option>
                         <option value="visiting doctor">Visiting Doctor</option>
+                        <option value="Admitted">Admitted</option>
                         <option value="Discharged">Discharged</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
