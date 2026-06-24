@@ -11,7 +11,7 @@ export default function Dashboard({ supabase, user, onSignOut }) {
   async function fetchTokens() {
     if (!supabase) { setError("Supabase not configured"); setLoading(false); return; }
     setLoading(true);
-    const { data, error } = await supabase.from("tockens").select("*").order("created_at", { ascending: true });
+    const { data, error } = await supabase.from("tokens").select("*").order("created_at", { ascending: true });
     if (error) setError(error.message);
     else setTokens(data || []);
     setLoading(false);
@@ -25,7 +25,7 @@ export default function Dashboard({ supabase, user, onSignOut }) {
 
   async function updateStatus(id, status) {
     if (!supabase) return;
-    const { error } = await supabase.from("tockens").update({ status }).eq("id", id);
+    const { error } = await supabase.from("tokens").update({ status }).eq("id", id);
     if (error) setError(error.message);
     else fetchTokens();
   }

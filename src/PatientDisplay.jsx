@@ -1,12 +1,19 @@
 export default function PatientDisplay({ tokens, onBack }) {
   const time = new Date();
   const formattedTime = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  const waitingTokens = tokens
-    .filter((token) => token.status === "waiting")
+
+  const patientWindow = [...tokens]
+    .filter((token) => ["waiting", "in observation", "in consultation", "visiting doctor"].includes(token.status))
     .sort((a, b) => a.token_no - b.token_no);
 
-  const nowServing = tokens.find((token) => ["in consultation", "visiting doctor"].includes(token.status)) || waitingTokens[0] || null;
-  const nextTokens = waitingTokens.slice(0, 3).map((t) => t.token_no);
+  const nowServing = patientWindow.find((token) => ["in consultation", "visiting doctor"].includes(token.status))
+    || patientWindow.find((token) => token.status === "waiting")
+    || null;
+
+  const nextTokens = patientWindow
+    .filter((token) => token.status === "waiting" && token.token_no > (nowServing?.token_no ?? 0))
+    .slice(0, 3)
+    .map((t) => t.token_no);
 
   return (
     <div className="display-screen">
@@ -30,7 +37,7 @@ export default function PatientDisplay({ tokens, onBack }) {
           <div className="next-list">
             {nextTokens.length > 0 ? nextTokens.map((tokenNo, index) => (
               <div key={tokenNo} className={`next-row next-row-${index + 1}`}>
-                <span>{String(tokenNo).padStart(3, "0")}</span>
+                <span>{`T${String(tokenNo).padStart(3, "0")}`}</span>
               </div>
             )) : <div className="empty-state">No next tokens</div>}
           </div>
